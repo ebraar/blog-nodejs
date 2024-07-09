@@ -17,7 +17,7 @@ router.use(comments);
 
 router.post("/upload", upload, (req, res) => {
   if (req.file) {
-    return res.status(200).json({ success: true, images: req.savedImages });
+    return res.status(200).json({ success: true, images: req.file });
   } else {
     return res.status(400).json({ error: "Resim Yüklenirken Hata Çıktı" });
   }
