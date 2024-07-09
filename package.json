@@ -1,5 +1,5 @@
 {
-  "name": "blog-nodejs",
+  "name": "nodejs-express-mongodb-starter-project",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -7,15 +7,39 @@
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "starter-api",
+    "starter-project",
+    "mongodb-starter-project",
+    "express-mongodb-starter-project",
+    "express-api",
+    "nodejs-rest-api",
+    "api-güvenligi",
+    "rest-api",
+    "api-securty",
+    "base-api",
+    "nodejs-base-api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.0",
-    "nodemon": "^3.1.4"
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.2.0",
+    "joi": "^17.6.1",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
+    "mongoose": "^8.3.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0",
+    "nodemon": "^3.1.0"
   }
 }
