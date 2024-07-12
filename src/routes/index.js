@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const upload = require('../multer/multerConfig').single('profilePicture');
 const User = require('../models/userModel');
 const fs = require('fs');
@@ -15,14 +16,29 @@ router.use(user);
 router.use(posts); 
 router.use(comments);
 
-router.post("/upload", upload, (req, res) => {
-  if (req.file) {
-    return res.status(200).json({ success: true, images: req.file });
-  } else {
-    return res.status(400).json({ error: "Resim Yüklenirken Hata Çıktı" });
+// Resim yükleme ve ek alanlar
+router.post('/images/add', upload, (req, res) => {
+  try {
+      console.log('Req.file:', req.file); // Log ekleyin
+      console.log('Req.body:', req.body); // Log ekleyin
+      if (req) {
+          console.log("File uploaded successfully:", req.file);
+          return res.status(200).json({ 
+              success: true, 
+              images: req.savedImages
+          });
+      } else {
+          console.error("File upload failed.");
+          return res.status(400).json({ error: "Resim Yüklenirken Hata Çıktı" });
+      }
+  } catch (error) {
+      console.error("Error during file upload:", error);
+      return res.status(500).json({ success: false, message: 'An error was encountered, please check your API service!', error: error.message });
   }
 });
 
+
+// resim güncelleme
 router.put('/users/updateProfile', upload, async (req, res) => {
   try {
     const { _id, bio } = req.body;

@@ -1,13 +1,28 @@
 const Post = require('../models/postModel');
 const Comment = require('../models/commentModel');
 const User = require('../models/userModel');
+const multer = require('multer');
+
+// Multer yapılandırması
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+});
+const upload = multer({ storage: storage });
 
 const createBlog = async (req, res) => {
     try {
         const { title, content, tags } = req.body;
         const author = req.user._id; // auth middleware'i tarafından sağlanır
 
-        const newBlog = new Post({ title, content, tags, author });
+        // Yüklenen dosyanın yolunu al
+        const image = req.file ? `/images/${req.file.filename}` : null;
+
+        const newBlog = new Post({ title, content, tags, author, image });
         await newBlog.save();
 
         return res.status(201).json(newBlog);
@@ -15,6 +30,7 @@ const createBlog = async (req, res) => {
         return res.status(500).json({ message: 'Bir hata meydana geldi', error: error.message });
     }
 };
+
 
 const updateBlog = async (req, res) => {
     try {
@@ -194,59 +210,6 @@ const likePost = async (req, res) => {
     }
 };
 
-const searchPosts = async (req, res) => {
-    try {
-        const { title, author, startDate, endDate, tags, sortBy } = req.query;
-        let query = {};
-
-        // Başlık arama
-        if (title) {
-            query.title = { $regex: title, $options: 'i' }; // Başlıkta arama ve büyük/küçük harf duyarlılığı
-        }
-
-        // Tarih aralığı filtreleme
-        if (startDate || endDate) {
-            query.createdAt = {};
-            if (startDate) query.createdAt.$gte = new Date(startDate);
-            if (endDate) query.createdAt.$lte = new Date(endDate);
-        }
-
-        // Etiketler filtreleme
-        if (tags) {
-            query.tags = { $in: tags.split(',') };
-        }
-
-        // Sıralama
-        let sortOption = {};
-        if (sortBy) {
-            if (sortBy === 'popularity') {
-                sortOption.views = -1; // Görüntülenme sayısına göre azalan sırada
-            } else if (sortBy === 'newest') {
-                sortOption.createdAt = -1; // En yeniye göre azalan sırada
-            } else if (sortBy === 'oldest') {
-                sortOption.createdAt = 1; // En eskiye göre artan sırada
-            }
-        }
-
-        let posts;
-
-        // Author adı ile arama
-        if (author) {
-            const users = await User.find({ name: { $regex: author, $options: 'i' } });
-            const userIds = users.map(user => user._id);
-            query.author = { $in: userIds };
-            posts = await Post.find(query).populate('author', 'name email').sort(sortOption);
-        } else {
-            posts = await Post.find(query).populate('author', 'name email').sort(sortOption);
-        }
-
-        return res.json(posts);
-    } catch (error) {
-        return res.status(500).json({ message: 'Bir hata meydana geldi', error: error.message });
-    }
-};
-
-
 
 module.exports = {
     createBlog,
@@ -259,6 +222,5 @@ module.exports = {
     deleteComment,
     getCommentsByPostId,
     likeComment,
-    likePost,
-    searchPosts
+    likePost
 };

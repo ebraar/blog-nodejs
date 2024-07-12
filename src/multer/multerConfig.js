@@ -8,13 +8,13 @@ const fileFilter = (req, file, cb) => {
         cb(new Error("Bu resim tipi desteklenmemektedir. Lütfen farklı bir resim seçiniz!"), false);
     } else {
         cb(null, true);
-    }
+    }   
 };
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const rootDir = path.dirname(require.main.filename);
-        const uploadPath = path.join(rootDir, '/public/uploads');
+        const uploadPath = path.join(rootDir, '/uploads');
         
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });

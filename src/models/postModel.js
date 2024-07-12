@@ -26,7 +26,10 @@ const PostSchema = new mongoose.Schema({
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'
-    }]
+    }],  image: {
+        type: String,
+        trim: true
+    }
 },{ collection: "blog_posts", timestamps: true });
 
 // İndeksler

@@ -3,9 +3,9 @@ const router = express.Router();
 const { tokenCheck } = require("../middlewares/auth");
 const blogController = require('../controllers/postController');
 const commentController = require('../controllers/postController');
+const upload = require('../multer/multerConfig');
 
-router.get('/posts/search', blogController.searchPosts); // Blog yazılarını arama ve filtreleme
-router.post('/posts/create', tokenCheck, blogController.createBlog); // Blog yazısı oluşturma
+router.post('/posts/create', tokenCheck, upload.single('image'), blogController.createBlog);
 router.put('/posts/update/:_id', tokenCheck, blogController.updateBlog); // Blog yazısı güncelleme
 router.delete('/posts/delete/:_id', tokenCheck, blogController.deleteBlog); // Blog yazısı silme
 router.get('/posts', blogController.getAllBlogs); // Tüm blog yazılarını listeleme
